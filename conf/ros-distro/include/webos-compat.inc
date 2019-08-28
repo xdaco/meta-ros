@@ -47,6 +47,31 @@ IMAGE_INSTALL_append_rpi = " kernel-modules"
 # otherwise e.g. vboxguest needed by qemux86 webos-images isn't enabled and do_rootfs fails
 PREFERRED_VERSION_linux-yocto = "4.18%"
 
+# Allow per-device configuration from a USB flash drive by having /etc/rc.local run
+# WEBOS_DEVICE_CONFIG_MOUNTPOINT/DISTRO-device-config/WEBOS_DEVICE_CONFIG_VERSION/rc.local . The settings below can be overridden
+# in conf/local.conf . XXX Eventually move into a .bbappend .
+WEBOS_DEVICE_CONFIG_MOUNTPOINT_pn-webos-initscripts = "/tmp/usb/sda/sda*"
+WEBOS_DEVICE_CONFIG_VERSION_pn-webos-initscripts = "v1"
+do_install_append_pn-webos-initscripts() {
+    mkdir -p ${D}${sysconfdir}
+     cat <<\! > ${D}${sysconfdir}/rc.local
+#! /bin/sh
+for f in ${WEBOS_DEVICE_CONFIG_MOUNTPOINT}/${DISTRO}-device-config/${WEBOS_DEVICE_CONFIG_VERSION}/rc.local; do
+    [ -x $f ] && $f
+done
+!
+    chmod a+x ${D}${sysconfdir}/rc.local
+
+    mkdir -p ${D}${sysconfdir}/systemd/system/rc-local.service.d
+    cat <<\! > ${D}${sysconfdir}/systemd/system/rc-local.service.d/30-after-webos-ibd.conf
+# /etc/rc.local isn't meant to be run until networking is up, but under webOS, this isn't the case until "webos-ibd.target" is
+# reached.
+[Unit]
+Requires=webos-ibd.target
+After=webos-ibd.target
+!
+}
+
 # Undo blacklisting
 PNBLACKLIST[libfreenect] ?= ""
 PNBLACKLIST[freenect-camera] ?= ""
