@@ -11,5 +11,6 @@ SRC_URI[sha256sum] = "8cb8d2df308951bea2824597194e4b34b73a22a05b462e92a6859bc8bd
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
 RDEPENDS_${PN} += "${PYTHON_PN}-catkin-pkg ${PYTHON_PN}-rospkg ${PYTHON_PN}-pyyaml ${PYTHON_PN}-netclient ${PYTHON_PN}-rosdistro"
+RDEPENDS_${PN} += "ca-certificates"
 
 BBCLASSEXTEND += "native"
