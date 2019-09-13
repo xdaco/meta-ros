@@ -2,6 +2,12 @@
 #
 # Copyright (c) 2019 LG Electronics, Inc.
 
+# Allow images of different ROS_DISTRO-s to be distinguished.
+ROS_IMAGE_BASENAME_APPEND ??= "-${ROS_DISTRO}"
+IMAGE_BASENAME_append = "${ROS_IMAGE_BASENAME_APPEND}"
+# Not sure why this is now needed ...
+PROVIDES += "${IMAGE_BASENAME}"
+
 # See https://github.com/agherzan/meta-raspberrypi/blob/master/docs/layer-contents.md -- but why aren't they always included by
 # meta-raspberrypi?
 IMAGE_INSTALL_append_rpi = " \
