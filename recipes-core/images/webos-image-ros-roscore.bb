@@ -7,6 +7,9 @@ LICENSE = "Apache-2.0"
 LAYERDIR_meta-webos = "${@(d.getVar('BBFILE_PATTERN_meta-webos', True) or '')[1:]}"
 include ${LAYERDIR_meta-webos}/recipes-core/images/webos-image.bb
 
+SUMMARY = "A webOS image just capable of starting core ROS."
+DESCRIPTION = "${SUMMARY}"
+
 inherit ros_distro_${ROS_DISTRO}
 inherit ${ROS_DISTRO_TYPE}_image
 
