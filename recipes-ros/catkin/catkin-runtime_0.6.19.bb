@@ -51,3 +51,5 @@ catkin_sysroot_preprocess_append() {
 }
 
 BBCLASSEXTEND += "native nativesdk"
+
+RDEPENDS_${PN}_class-native = ""
